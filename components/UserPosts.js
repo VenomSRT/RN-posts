@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { FlatList, ListItem, StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 
-const UserPosts = ({ user, posts }) => {
+const UserPosts = ({ posts }) => {
   return (
     <FlatList
       data={posts}
       renderItem={({item}) => (
         <View style={styles.listItem}>
-          <Text style={styles.postTitle}>
+          <Text
+            style={styles.postTitle}
+          >
             {item.title}
           </Text>
           <Text style={styles.postBody}>
