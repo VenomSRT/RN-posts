@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, View, Text, TextInput, Image, SafeAreaView } from 'react-native';
 import { NativeRouter, Switch, Route } from 'react-router-native';
 
@@ -39,6 +39,13 @@ const App = () => {
   }
 
 
+  function setAuthor(authorId) {
+    setCurrentUser(authorId);
+  }
+
+  const callback = useCallback(setAuthor, []);
+
+
   return (
     <NativeRouter>
       <View>
@@ -50,12 +57,12 @@ const App = () => {
           <Route
             exact
             path="/"
-            component={() => <Authors users={users} setAuthor={setCurrentUser} />}
+            component={() => <Authors users={users} />}
           />
 
           <Route
             exact
-            path="/posts"
+            path={`/posts/${currentUser}`}
             component={() => <UserPosts posts={findUserPosts()}/>}
           />
         </Switch>

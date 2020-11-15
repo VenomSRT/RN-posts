@@ -1,19 +1,17 @@
-import React from 'react';
-import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
+import { Link } from "react-router-native";
 
-const Authors = ({ users, setAuthor, history }) => {
+const Authors = ({ users, setCurrentUser }) => { 
   return (
     <FlatList
       data={users}
       style={styles.usersList}
       keyExtractor={(item) => `${item.id}`}
       renderItem={({item}) => (
-        <TouchableOpacity
-          onPress={() => {
-            setAuthor(item.id);
-            history.push('/posts');
-          }}
-          activeOpacity={0.9}
+        <Link
+          to={`/posts/${item.id}`}
+          onPress={setCurrentUser(item.id)}
         >
           <View
             style={styles.listElement}
@@ -51,7 +49,7 @@ const Authors = ({ users, setAuthor, history }) => {
               </View>
             </View>
           </View>
-        </TouchableOpacity>
+        </Link>
       )}
     />
   );
