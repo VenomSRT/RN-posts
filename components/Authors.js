@@ -1,59 +1,64 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 
-const Authors = ({ users, setAuthor, history }) => {
+import Search from './Search';
+
+const Authors = ({ users }) => {
+  const [ filteredUsers, setFilteredUsers ] = useState([]);
+
   return (
-    <FlatList
-      data={users}
-      style={styles.usersList}
-      keyExtractor={(item) => `${item.id}`}
-      renderItem={({item}) => (
-        <TouchableOpacity
-          onPress={() => {
-            setAuthor(item.id);
-            history.push('/posts');
-          }}
-          activeOpacity={0.9}
-        >
-          <View
-            style={styles.listElement}
+    <View>
+      <Search users={users} setUsers={setFilteredUsers} />
+      <FlatList
+        data={filteredUsers.length ? filteredUsers : users}
+        style={styles.usersList}
+        keyExtractor={(item) => `${item.id}`}
+        renderItem={({item}) => (
+          <TouchableOpacity
+            onPress={() => Actions[`user${item.id}`]()}
+            activeOpacity={0.7}
           >
-            <View style={styles.shortcutContainer}>
-              <Text style={styles.shortcutText}>
-                {(
-                  item.name.split(' ')[0][0]
-                  + item.name.split(' ')[1][0]
-                )}
-              </Text>
-            </View>
-            <View style={styles.mainContainer}>
-              <View style={styles.authorInfo}>
-                <Text
-                  style={styles.authorName}
-                >
-                  {item.name}
-                </Text>
-                <Text
-                  style={styles.authorMail}
-                >
-                  {item.email}
+            <View
+              style={styles.listElement}
+            >
+              <View style={styles.shortcutContainer}>
+                <Text style={styles.shortcutText}>
+                  {(
+                    item.name.split(' ')[0][0]
+                    + item.name.split(' ')[1][0]
+                  )}
                 </Text>
               </View>
-              <View style={styles.authorPosts}>
-                <Text
-                  style={styles.postsText}
-                >
-                  {item.posts} posts
-                </Text>
-                <Image
-                  source={require('../images/chevron.png')}
-                />
+              <View style={styles.mainContainer}>
+                <View style={styles.authorInfo}>
+                  <Text
+                    style={styles.authorName}
+                  >
+                    {item.name}
+                  </Text>
+                  <Text
+                    style={styles.authorMail}
+                  >
+                    {item.email}
+                  </Text>
+                </View>
+                <View style={styles.authorPosts}>
+                  <Text
+                    style={styles.postsText}
+                  >
+                    {item.posts} posts
+                  </Text>
+                  <Image
+                    source={require('../images/chevron.png')}
+                  />
+                </View>
               </View>
             </View>
-          </View>
-        </TouchableOpacity>
-      )}
-    />
+          </TouchableOpacity>
+        )}
+      />
+    </View>
   );
 }
 

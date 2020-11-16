@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, TextInput, Image, } from 'react-native';
 
-const Search = ({ setInputValue, currentValue }) => {
+const Search = ({ users, setUsers }) => {
+  const [ inputValue, setInputValue ] = useState('');
+  const [ currentValue, setCurrentValue ] = useState('');
+
   return (
     <View style={styles.searchContainer}>
       <Image
@@ -24,7 +27,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: 16,
-    marginBottom: 28,
+    marginVertical: 20,
     paddingLeft: 11,
     borderRadius: 4,
     backgroundColor: '#e5e5e5',

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TextInput, Image, SafeAreaView } from 'react-native';
-import { NativeRouter, Switch, Route } from 'react-router-native';
+import { StyleSheet, View } from 'react-native';
+import { Router, Scene } from 'react-native-router-flux';
 
-import Search from './components/Search';
 import Authors from './components/Authors';
 import UserPosts from './components/UserPosts';
 
@@ -12,10 +11,7 @@ import { postsData } from './data/posts';
 
 const App = () => {
   const [ users, setUsers ] = useState(usersData ? usersData : 'No users');
-  const [ posts, setPosts ] = useState(postsData ? postsData : 'No posts');
-  const [ title, setTitle ] = useState('Authors');
-  const [ currentUser, setCurrentUser ] = useState('');
-  const [ searchInput, setSearchInput ] = useState('');
+  const [ posts, setPosts ] = useState(postsData ? postsData : 'No posts');  
 
   setPostsCount();
 
@@ -34,54 +30,40 @@ const App = () => {
     }
   }
 
-  function findUserPosts() {
-    return posts.filter(post => post.userId === currentUser);
+  function findUserPosts(userId) {
+    return posts.filter(post => post.userId === userId);
   }
 
 
   return (
-    <NativeRouter>
-      <View>
-        <Text>{title}</Text>
-      </View>
-      <Search setInputValue={setSearchInput} currentValue={searchInput} />
-      <View>
-        <Switch>
-          <Route
-            exact
-            path="/"
-            component={() => <Authors users={users} setAuthor={setCurrentUser} />}
+    <Router>
+      <Scene key="root">
+          <Scene
+            initial
+            key="authors"
+            title="Authors"
+            component={() => <Authors users={users} />}
           />
 
-          <Route
-            exact
-            path="/posts"
-            component={() => <UserPosts posts={findUserPosts()}/>}
-          />
-        </Switch>
-      </View>
-    </NativeRouter>
+          {users.map(user => (
+              <Scene
+                key={`user${user.id}`}
+                title={user.name}
+                component={() => <UserPosts posts={findUserPosts(user.id)} />}
+              />
+            )
+          )}
+      </Scene>
+    </Router>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#fff',
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
-    marginTop: 20,
     marginHorizontal: 16,
-  },
-
-  titleContainer: {
-    height: 40,
-    flexDirection: 'row',
-  },
-
-  title: {
-    fontSize: 16,
-    lineHeight: 40,
   },
 });
 
