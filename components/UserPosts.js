@@ -1,15 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
-
 import Search from './Search';
 
 const UserPosts = ({ posts }) => {
+  const [ filteredPosts, setFilteredPosts ] = useState([]);
 
   return (
     <View style={styles.listContainer}>
-      <Search />
+      <Search
+        itemsToFilter={posts}
+        setItems={setFilteredPosts}
+      />
+
       <FlatList
-        data={posts}
+        data={filteredPosts.length ? filteredPosts : posts}
         renderItem={({item}) => (
           <View style={styles.listItem}>
             <Text

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet } from 'react-native';
 import { Router, Scene } from 'react-native-router-flux';
 
 import Authors from './components/Authors';
@@ -33,7 +33,6 @@ const App = () => {
   function findUserPosts(userId) {
     return posts.filter(post => post.userId === userId);
   }
-
 
   return (
     <Router>

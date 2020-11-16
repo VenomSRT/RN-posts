@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-
 import Search from './Search';
 
 const Authors = ({ users }) => {
@@ -9,7 +8,11 @@ const Authors = ({ users }) => {
 
   return (
     <View>
-      <Search users={users} setUsers={setFilteredUsers} />
+      <Search
+        itemsToFilter={users}
+        setItems={setFilteredUsers}
+      />
+
       <FlatList
         data={filteredUsers.length ? filteredUsers : users}
         style={styles.usersList}
@@ -24,10 +27,13 @@ const Authors = ({ users }) => {
             >
               <View style={styles.shortcutContainer}>
                 <Text style={styles.shortcutText}>
-                  {(
-                    item.name.split(' ')[0][0]
-                    + item.name.split(' ')[1][0]
-                  )}
+                  {
+                    (() => {
+                      const splittedName = item.name.split(' ');
+
+                      return splittedName[0][0] + splittedName[1][0]
+                    })()
+                  }
                 </Text>
               </View>
               <View style={styles.mainContainer}>
@@ -60,7 +66,7 @@ const Authors = ({ users }) => {
       />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   listElement: {
