@@ -1,66 +1,81 @@
-import React from 'react';
-import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { Actions } from 'react-native-router-flux';
+import Search from './Search';
 
-const Authors = ({ users, userSetter }) => {
+const Authors = ({ users }) => {
+  const [ filteredUsers, setFilteredUsers ] = useState([]);
 
   return (
-    <FlatList
-      data={users}
-      renderItem={({item}) => (
-        <View
-          style={styles.listElement}
-        >
-          <View style={styles.shortcutContainer}>
-            <Text style={styles.shortcutText}>
-              {(
-                item.name.split(' ')[0][0]
-                + item.name.split(' ')[1][0]
-              )}
-            </Text>
-          </View>
-          <View style={styles.mainContainer}>
-            <View style={styles.authorInfo}>
-              <Text
-                style={styles.authorName}
-              >
-                {item.name}
-              </Text>
-              <Text
-                style={styles.authorMail}
-              >
-                {item.email}
-              </Text>
+    <View>
+      <Search
+        itemsToFilter={users}
+        setItems={setFilteredUsers}
+      />
+
+      <FlatList
+        data={filteredUsers.length ? filteredUsers : users}
+        style={styles.usersList}
+        keyExtractor={(item) => `${item.id}`}
+        renderItem={({item}) => (
+          <TouchableOpacity
+            onPress={() => Actions[`user${item.id}`]()}
+            activeOpacity={0.7}
+          >
+            <View
+              style={styles.listElement}
+            >
+              <View style={styles.shortcutContainer}>
+                <Text style={styles.shortcutText}>
+                  {
+                    (() => {
+                      const splittedName = item.name.split(' ');
+
+                      return splittedName[0][0] + splittedName[1][0]
+                    })()
+                  }
+                </Text>
+              </View>
+              <View style={styles.mainContainer}>
+                <View style={styles.authorInfo}>
+                  <Text
+                    style={styles.authorName}
+                  >
+                    {item.name}
+                  </Text>
+                  <Text
+                    style={styles.authorMail}
+                  >
+                    {item.email}
+                  </Text>
+                </View>
+                <View style={styles.authorPosts}>
+                  <Text
+                    style={styles.postsText}
+                  >
+                    {item.posts} posts
+                  </Text>
+                  <Image
+                    source={require('../images/chevron.png')}
+                  />
+                </View>
+              </View>
             </View>
-            <View style={styles.authorPosts}>
-              <Text
-                style={styles.postsText}
-                onPress={() => userSetter(item.id)}
-              >
-                {item.posts} posts
-              </Text>
-              <Image
-                source={require('../images/chevron.png')}
-              />
-            </View>
-          </View>
-        </View>
-        
-      )}
-      keyExtractor={(item) => `${item.id}`}
-      style={styles.usersList}
-    />
+          </TouchableOpacity>
+        )}
+      />
+    </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   listElement: {
     flexDirection: 'row',
     flexGrow: 1,
     flex: 1,
-    width: '100%',
     alignItems: 'center',
+    marginHorizontal: 16,
     marginBottom: 30,
-    backgroundColor: 'black',
   },
 
   shortcutContainer: {
@@ -82,7 +97,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexGrow: 1,
     paddingLeft: 16,
-    backgroundColor: 'pink',
   },
 
   authorInfo: {
@@ -101,7 +115,6 @@ const styles = StyleSheet.create({
   authorPosts: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'yellow',
   },
 
   postsText: {
